@@ -1,3 +1,5 @@
+Youtube video introducing the project: <https://youtu.be/S4hMOvJajeo>
+
 # Singapore API key
 
 Jump hoops by going to <https://www.nea.gov.sg/api> to register for an API.
