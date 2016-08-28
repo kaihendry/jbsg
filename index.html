@@ -36,7 +36,7 @@ html, body {
 {{/if}}
 {{/each}}
 
-{{#if items.NPSI >= 100}}
+{{#if items.NPSI_PM25_3HR >= 100}}
 <div class=bad><p>North Singapore is unhealthy with {{items.NPSI}} <abbr title="Pollutant Standards Index">PSI</abbr>. Updated {{ fromNow( items.timestamp ) }}</p></div>
 {{else}}
 <div class=good><p>North Singapore is healthy with {{items.NPSI}} <abbr title="Pollutant Standards Index">PSI</abbr>. Updated {{ fromNow( items.timestamp ) }}</p></div>
