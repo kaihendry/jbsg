@@ -4,12 +4,25 @@
 date_default_timezone_set('Asia/Singapore');
 header('Content-Type: application/json');
 
-// Keys suck http://dabase.com/blog/Javascript_API_barriers/
 $creds = parse_ini_file(".creds.ini");
-$xml = simplexml_load_file("http://www.nea.gov.sg/api/WebAPI/?dataset=psi_update&keyref=" . $creds["key"]);
+$url = "http://api.nea.gov.sg/api/WebAPI/?dataset=psi_update&keyref=" . $creds["key"];
 
-// When debugging save the XML to /tmp/xml.txt
-//$xml = simplexml_load_file("/tmp/xml.txt");
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4 );
+$result=curl_exec($ch);
+$info = curl_getinfo($ch);
+$errinfo = curl_error($ch);
+curl_close($ch);
+
+$dir = 'log/' . date("Y-m-d");
+$fn = $dir . '/' . time() . ".txt";
+@mkdir($dir, 0777, true);
+
+file_put_contents($fn, "[Curl info]\n" . print_r($info, true) . "\n[Curl Error]\n" . print_r($errinfo, true) . "\n[XML]\n" . $result);
+
+$xml = simplexml_load_string($result);
 
 $array = array();
 

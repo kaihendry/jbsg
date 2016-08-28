@@ -14,7 +14,7 @@ function fetchJSONFile(path, callback) {
 }
 
 fetchJSONFile('/nsg.php', function(json){
-	fetchJSONFile('http://data.hazewatchapp.com/index_v2.json', function(json2){
+	fetchJSONFile('/index_v2.json', function(json2){
 			var ractive = new Ractive({
 				el: '#container',
 				template: '#template',
