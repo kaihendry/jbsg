@@ -14,4 +14,5 @@ app](http://dabase.com/blog/Javascript_API_barriers/). Also XML is an abominatio
 
 # Acknowledgements
 
+* <https://github.com/HazeWatchApp/apims_data> for the JB data source!
 * @cheeaun for <https://twitter.com/cheeaun/status/657045289337909248> aka best front end engineer I've come across
