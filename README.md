@@ -1,18 +1,23 @@
-Youtube video introducing the project: <https://youtu.be/S4hMOvJajeo>
+# Singapore
 
-# Singapore API key
+curl -X GET "https://api.data.gov.sg/v1/environment/pm25" -H "accept: application/json"
 
-Jump hoops by going to <https://www.nea.gov.sg/api> to register for an API.
+https://www.haze.gov.sg/
 
-Then populate `.creds.ini` with that 48 character long key:
+	0 - 55	I	Normal
+	56 - 150	II	Elevated
+	151 - 250	III	High
+	Above 250	IV	Very High
 
-key=FOOBARBB6606AD0308169EFFAA82311AFE51365CC7530A
+# Malaysia
 
-The app would be a lot simpler and a lot less frustrating if it [didn't
-require a key to disallow a simple static client side Javascript
-app](http://dabase.com/blog/Javascript_API_barriers/). Also XML is an abomination. Please use JSON.
+curl http://apims.doe.gov.my/data/public/CAQM/last24hours.json | jq
 
-# Acknowledgements
+Pasir Gudang
 
-* <https://github.com/HazeWatchApp/apims_data> for the JB data source!
-* @cheeaun for <https://twitter.com/cheeaun/status/657045289337909248> aka best front end engineer I've come across
+<img src="https://s.natalian.org/2018-11-14/my-unhealthy.png">
+
+# Thanks
+
+* Han on https://engineersmy.slack.com
+* [Nazroll](https://twitter.com/nazroll/status/1062660038639128576)
