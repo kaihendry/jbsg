@@ -7,13 +7,12 @@
 <meta name="description" content="Comparing if two neighbouring countries think the air quality is healthy or not">
 <style>
 html, body {
-	height:100%;
+	height: 100%;
 	color: white;
-	font-size: 1.4em;
-	font-family: sans-serif;
+	font-size: 2em;
+	font-family: "Open Sans", "Segoe UI", "Seravek", sans-serif;
 }
 #container { display: flex; width: 100%; height: 100%; flex-direction: column; }
-
 #container div { display: flex; flex: 1;  justify-content: center; align-items: center; text-align: center; padding: 10px; }
 .bad { background-color: yellow; }
 .good { background-color: green; }
@@ -31,14 +30,12 @@ html, body {
 <div class="good">{{ .Johor }}</div>
 {{ end }}
 
-
-{{ if gt .Singapore 55 }}
+<!-- https://www.haze.gov.sg/images/default-source/health-advisory-images/hazy.jpg -->
+{{ if gt .Singapore 100 }}
 <div class="bad">{{ .Singapore }}</div>
 {{ else }}
 <div class="good">{{ .Singapore }}</div>
 {{ end }}
-
 </div>
-
 </body>
 </html>

@@ -13,12 +13,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var views = template.Must(template.ParseGlob("templates/*.html"))
+
 func main() {
 	addr := ":" + os.Getenv("PORT")
 	app := mux.NewRouter()
-
 	app.HandleFunc("/", handleIndex).Methods("GET")
-
 	if err := http.ListenAndServe(addr, app); err != nil {
 		log.WithError(err).Fatal("error listening")
 	}
@@ -38,14 +38,24 @@ func johorReading() (pasirgudang int, err error) {
 	}
 	var aq MalaysiaAPI
 	err = json.NewDecoder(resp.Body).Decode(&aq)
+	if err != nil {
+		return pasirgudang, err
+	}
 	defer resp.Body.Close()
 	// log.Infof("%v", aq)
 
 	for _, v := range aq.Two4HourAPI {
+		if v[1] == "Location" {
+			latest := v[len(v)-1]
+			log.Infof("Latest: %s", latest)
+		}
 		if v[1] == "Pasir Gudang" {
 			latest := v[len(v)-1]
 			log.Infof("Latest: %s", latest)
-			fmt.Sscanf(latest, "%d**", &pasirgudang)
+			_, err := fmt.Sscanf(latest, "%d**", &pasirgudang)
+			if err != nil {
+				return pasirgudang, err
+			}
 			break
 		}
 	}
@@ -100,18 +110,25 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	sg, err := singaporeReading()
 	if err != nil {
 		log.WithError(err).Fatal("failed to get singapore reading")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	johor, err := johorReading()
 	if err != nil {
 		log.WithError(err).Fatal("failed to get johor reading")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	t := template.Must(template.New("").ParseGlob("templates/*.html"))
-	t.ExecuteTemplate(w, "index.html", map[string]int{
+	err = views.ExecuteTemplate(w, "index.html", map[string]int{
 		"Singapore": sg,
 		"Johor":     johor,
 	})
+
+	if err != nil {
+		log.WithError(err).Fatal("template failed to parse")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
