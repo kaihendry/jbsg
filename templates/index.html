@@ -24,17 +24,17 @@ html, body {
 
 <div id='container'>
 
-{{ if gt .Johor 100 }}
-<div class="bad">{{ .Johor }}</div>
+{{ if gt .Johor.Value 100 }}
+<div class="bad">{{ .Johor.Value }} {{ .Johor.Timestamp }}</div>
 {{ else }}
-<div class="good">{{ .Johor }}</div>
+<div class="good">{{ .Johor.Value }} {{ .Johor.Timestamp }}</div>
 {{ end }}
 
 <!-- https://www.haze.gov.sg/images/default-source/health-advisory-images/hazy.jpg -->
-{{ if gt .Singapore 100 }}
-<div class="bad">{{ .Singapore }}</div>
+{{ if gt .Singapore.Value 100 }}
+<div class="bad">{{ .Singapore.Value }} {{ .Singapore.Timestamp }}</div>
 {{ else }}
-<div class="good">{{ .Singapore }}</div>
+<div class="good">{{ .Singapore.Value }} {{ .Singapore.Timestamp }}</div>
 {{ end }}
 </div>
 </body>
