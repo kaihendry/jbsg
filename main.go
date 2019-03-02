@@ -13,7 +13,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var views = template.Must(template.New("").Funcs(template.FuncMap{"since": time.Since}).ParseGlob("templates/*.html"))
+var views = template.Must(template.New("").Funcs(template.FuncMap{
+	"since": func(t time.Time) string {
+		return fmt.Sprintf("%dminutes ago", int(time.Since(t).Minutes()))
+	}}).ParseGlob("templates/*.html"))
 
 type Reading struct {
 	Value     int // >100 is unhealthy by either measurement

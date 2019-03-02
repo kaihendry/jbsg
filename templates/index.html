@@ -28,7 +28,7 @@ html, body {
 {{ else }}
 <div class="good">
 {{ end }}
-{{ .Johor.Value }} @ <time datetime="{{ .Johor.Timestamp }}">{{ .Johor.Timestamp | since }}</time> ago
+{{ .Johor.Value }} @<time datetime="{{ .Johor.Timestamp }}">{{ .Johor.Timestamp | since }}</time>
 </div>
 
 <!-- https://www.haze.gov.sg/images/default-source/health-advisory-images/hazy.jpg -->
@@ -37,7 +37,7 @@ html, body {
 {{ else }}
 <div class="good">
 {{ end }}
-{{ .Singapore.Value }} @ <time datetime="{{ .Singapore.Timestamp }}">{{ .Singapore.Timestamp | since }}</time> ago
+{{ .Singapore.Value }} @<time datetime="{{ .Singapore.Timestamp }}">{{ .Singapore.Timestamp | since }}</time>
 </div>
 
 </body>
