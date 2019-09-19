@@ -11,17 +11,18 @@ import (
 
 	"github.com/apex/log"
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 )
-
-var views = template.Must(template.New("").Funcs(template.FuncMap{
-	"since": func(t time.Time) string {
-		return fmt.Sprintf("%dminutes ago", int(time.Since(t).Minutes()))
-	}}).ParseGlob("templates/*.html"))
 
 type Reading struct {
 	Value     int // >100 is unhealthy by either measurement
 	Timestamp time.Time
 }
+
+var views = template.Must(template.New("").Funcs(template.FuncMap{
+	"since": func(t time.Time) string {
+		return fmt.Sprintf("%dminutes ago", int(time.Since(t).Minutes()))
+	}}).ParseGlob("templates/*.html"))
 
 func main() {
 	addr := ":" + os.Getenv("PORT")
@@ -39,13 +40,13 @@ func johorReading() (pasirgudang Reading, err error) {
 	type MalaysiaAPI struct {
 		Two4HourAPI [][]string `json:"24hour_api"`
 	}
+	var aq MalaysiaAPI
 
 	resp, err := http.Get("http://apims.doe.gov.my/data/public/CAQM/last24hours.json")
 	if err != nil {
-		return pasirgudang, err
+		return
 	}
 
-	var aq MalaysiaAPI
 	err = json.NewDecoder(resp.Body).Decode(&aq)
 	if err != nil {
 		return pasirgudang, err
@@ -64,7 +65,7 @@ func johorReading() (pasirgudang Reading, err error) {
 			latest = time.Now().Format("2006-01-02") + " " + latest
 			pasirgudang.Timestamp, err = time.ParseInLocation("2006-01-02 3:04PM", latest, loc)
 			if err != nil {
-				log.WithError(err).Error("failed to parse time")
+				return
 			}
 		}
 		if v[1] == "Pasir Gudang" {
@@ -72,14 +73,12 @@ func johorReading() (pasirgudang Reading, err error) {
 			log.Infof("Latest: %s", latest)
 			_, err = fmt.Sscanf(latest, "%d**", &pasirgudang.Value)
 			if err != nil {
-				log.WithError(err).Error("failed to scan value")
+				return pasirgudang, errors.Wrap(err, "Pasir Gudang reading is not available")
 			}
 			break
 		}
 	}
-
 	return pasirgudang, err
-
 }
 
 func singaporeReading() (northSingapore Reading, err error) {
@@ -131,13 +130,11 @@ func handleIndex(w http.ResponseWriter, r *http.Request) {
 	northSingapore, err := singaporeReading()
 	if err != nil {
 		log.WithError(err).Error("failed to get singapore reading")
-		return
 	}
 
 	johor, err := johorReading()
 	if err != nil {
 		log.WithError(err).Error("failed to get johor reading")
-		return
 	}
 
 	err = views.ExecuteTemplate(w, "index.html", map[string]Reading{
